@@ -43,4 +43,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/CravingsInc"
   },
+  "dependencies": {
+    "@CravingsInc/ca-sdk": "file:"
+  }
 }
