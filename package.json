@@ -1,0 +1,44 @@
+{
+  "name": "@CravingsInc/ca-sdk",
+  "version": "1.0.0",
+  "description": "CravingsInc Analysis SDK",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollup": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CravingsInc/ca-sdk.git"
+  },
+  "keywords": [
+    "Analysis"
+  ],
+  "author": "CravingsInc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CravingsInc/ca-sdk/issues"
+  },
+  "homepage": "https://github.com/CravingsInc/ca-sdk#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/react": "^19.1.4",
+    "react": "^19.1.0",
+    "rollup": "^4.41.0",
+    "rollup-plugin-dts": "^6.2.1",
+    "typescript": "^5.8.3"
+  },
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/CravingsInc"
+  },
+  "dependencies": {
+    "@CravingsInc/ca-sdk": "file:"
+  }
+}
