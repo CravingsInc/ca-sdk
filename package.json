@@ -1,12 +1,17 @@
 {
   "name": "@CravingsInc/ca-sdk",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "CravingsInc Analysis SDKs",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rollup": "rollup -c",
-    "publish": "npm run rollup && npm publish --access public"
+    "build": "tsc",
+    "dev": "cd example && npm install && npm run dev",
+    "prepare": "npm run build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -21,27 +26,19 @@
     "url": "https://github.com/CravingsInc/ca-sdk/issues"
   },
   "homepage": "https://github.com/CravingsInc/ca-sdk#readme",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@types/react": "^19.1.4",
-    "react": "^19.1.0",
-    "rollup": "^4.41.0",
-    "rollup-plugin-dts": "^6.2.1",
-    "rollup-plugin-postcss": "^4.0.2",
-    "typescript": "^5.8.3"
-  },
-  "peerDependencies": {
-    "react": "^17.0.2"
-  },
-  "module": "dist/esm/index.js",
-  "files": [
-    "dist"
-  ],
-  "types": "dist/index.d.ts",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/CravingsInc"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "@CravingsInc/ca-sdk": "file:"
