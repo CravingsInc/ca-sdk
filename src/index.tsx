@@ -1,3 +1,3 @@
-import { CASDK } from './CaSDK';
+import { CASDK } from './core';
 
 export default CASDK;
