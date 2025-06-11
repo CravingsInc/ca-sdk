@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@CravingsInc/ca-sdk": "file:",
+    "react-router-dom": "^7.6.2",
     "uuid": "^11.1.0"
   }
 }

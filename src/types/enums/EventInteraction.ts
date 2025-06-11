@@ -1,5 +1,8 @@
 export enum EventsType {
     CLICK = "Click",
+    MANUAL= "MANUAL",
+    COMPONENT_MOUNT = "COMPONENT_MOUNT",
+    COMPONENT_UNMOUNT = "COMPONENT_UNMOUNT",
     SCROLL =  "SCROLL",
     INPUT = "INPUT"
 }

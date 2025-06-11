@@ -12,7 +12,7 @@ export enum DeviceOS {
     LINUX = "LINUX"
 }
 
-export enum DeviceBroswer {
+export enum DeviceBrowser {
     CHROME = "Chrome",
     FIREFOX = "FireFox",
     SAFARI = "Safari",

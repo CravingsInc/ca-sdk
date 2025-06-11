@@ -12,11 +12,13 @@ export type Sessions = {
     createdAt: Date;
 
     lastActiveAt: Date;
+
+    lastSaveAt: Date;
     
     deviceInfo: {
         type: DeviceInfo.DeviceType,
         os: DeviceInfo.DeviceOS,
-        browser: DeviceInfo.DeviceBroswer;
+        browser: DeviceInfo.DeviceBrowser;
     };
 
     location?: {
@@ -29,7 +31,8 @@ export type Sessions = {
         }
     };
     
-    expired: boolean;
+    expired: {
+        expired: boolean;
+        reason?: "unmount" | "timeout" | "manual" | null
+    };
 }
-
-
