@@ -2,6 +2,7 @@ import { LocationData } from "../types/Location";
 import { Referrer as RFType } from "../types/Referrer";
 
 export namespace Utility {
+
     export class Referrer {
         public static inferPlatformFromClickId(parse: URLSearchParams) {
             if (parse.get("fbclid")) return "Facebook";
@@ -34,15 +35,26 @@ export namespace Utility {
     }
 
     export class Location {
+        private static _locationApi = "";
+
+        public static setLocationApi( api: string ) {
+            this._locationApi = api
+        }
+
+        public static isLocationApi( lApi: string ) { return this._locationApi === lApi }
+
         public static async fetchLocation(): Promise<LocationData | null> {
             try {
-                const res = await fetch("https://ipapi.co/json/");
+                const res = await fetch( this._locationApi );
                 const data = await res.json();
 
+                console.log( data )
+
                 return {
-                    country: data.country,
+                    country: data.country_code,
                     city: data.city,
-                    region: data.region,
+                    state: data.Minnesota,
+                    postal: data.postal,
                     coordinates: {
                         lat: parseFloat(data.latitude),
                         lng: parseFloat(data.longitude),

@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     <React.StrictMode>
         <BrowserRouter>
-            <CASDK platform="CravingsInc">
+            <CASDK platform="CravingsInc" locationApi="https://geolocation-db.com/json" >
                 <App />
             </CASDK>
         </BrowserRouter>

@@ -1,7 +1,8 @@
 export type LocationData = {
     country: string;
     city: string;
-    region: string;
+    state: string;
+    postal: number;
     coordinates?: {
         lat: number;
         lng: number;
