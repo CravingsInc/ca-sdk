@@ -70,7 +70,14 @@ Tracks each time a user navigates to a page route
     id: string; // unique page session id
     sessionId: string; // session id
     url: string; // page url
-    referrer?: string; // referrer url
+    referrer: {
+      utm_source: string | null;
+      utm_medium: string | null;
+      utm_campaign?: string | null;
+      utm_term?: string | null;
+      utm_content?: string | null;
+      raw_url?: string;
+    };
     timeStarted: Date; // timestamp when the page was loaded
     timeEnded: Date; // timestamp when the page was unloaded
     timeSpent: number; // time spent on the page in milliseconds

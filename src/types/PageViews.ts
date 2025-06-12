@@ -1,4 +1,5 @@
 import { EventsInteraction } from "./EventsInteraction";
+import { Referrer } from "./Referrer";
 
 export type PageViews = {
     id: string;
@@ -7,7 +8,7 @@ export type PageViews = {
 
     url: string;
 
-    referrer?: string; // referrer url
+    referrer: Referrer;
 
     timeStarted: Date; // Timestamp when the page was loaded
 

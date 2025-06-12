@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PageViews, EventsInteraction } from '../types';
 
 import { EventsType } from '../types/enums/EventInteraction';
+import { Utility } from './Utility';
+import { Referrer } from '../types/Referrer';
 
 type PageTrackerListener = () => void;
 
@@ -15,10 +17,12 @@ export type PageTrackerHandler = {
     endView: () => void;
     startNewView: ( url: string, referrer: string | null ) => void;
     triggerEvent: ( event: { target: string; type: EventsType; data?: any; id?: string; }) => void;
+    platform: string;
 }
 
 class PageTracker {
     private static _instance: PageTracker;
+    private static _platform: string;
 
     private listeners: Set<PageTrackerListener> = new Set();
 
@@ -27,10 +31,12 @@ class PageTracker {
     private interactionEvents: EventsInteraction[] = [];
     private interactionCount = 0;
 
-    private constructor() {}
+    private constructor( platform: string ) {
+        PageTracker._platform = platform;
+    }
 
-    public static getInstance(): PageTracker {
-        if (!PageTracker._instance) PageTracker._instance = new PageTracker();
+    public static getInstance( platform: string ): PageTracker {
+        if (!PageTracker._instance) PageTracker._instance = new PageTracker( platform ); 
 
         return PageTracker._instance;
     }
@@ -47,7 +53,7 @@ class PageTracker {
     public startNewView( sessionId: string, url: string, referrer: string | null = null) {
 
         // End Previous View
-        this.endView();
+        const prevUrl = this.endView();
 
         const now = new Date();
 
@@ -55,7 +61,7 @@ class PageTracker {
             id: uuidv4(),
             sessionId,
             url: `${url.substring(url.indexOf('/'))}`, // Makes sure it isn't domain based tracking, but just route
-            referrer: referrer ?? document.referrer,
+            referrer: Utility.Referrer.parseReferrer( window.document.referrer || referrer || prevUrl, referrer || prevUrl ),
             timeStarted: now,
             timeEnded: now, // will be updated on end
             timeSpent: 0,
@@ -123,7 +129,9 @@ class PageTracker {
     }
 
     public endView() {
-        if (!this.currentView) return;
+        if (!this.currentView) return "/";
+
+        const prevUrl = this.currentView.url;
 
         const now = new Date();
 
@@ -143,6 +151,8 @@ class PageTracker {
         //
 
         this.currentView = null;
+
+        return prevUrl;
     }
 
     public getCurrentView(): PageViews | null {
@@ -181,4 +191,4 @@ class PageTracker {
     }
 }
 
-export default PageTracker.getInstance();
+export default PageTracker;

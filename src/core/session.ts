@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceInfo, Sessions } from '../types';
 import { useEffect, useState } from 'react';
+import { Utility } from './Utility';
 
 type SessionContextType = {
     session: Sessions | null;
@@ -53,6 +54,8 @@ export class SessionManager {
                     timeUntilLoggedIn: 0
                 },
 
+                referrer: Utility.Referrer.parseReferrer(window.document.referrer || window.location.href, window.location.href),
+
                 createdAt: now,
                 lastActiveAt: now,
                 lastSaveAt: now,
@@ -63,6 +66,13 @@ export class SessionManager {
 
                 deviceInfo: this.detectDeviceInfo()
             }
+
+            Utility.Location.fetchLocation().then((loc) => {
+                if (loc && this._session) {
+                    this._session.location = loc;
+                    this.save();
+                }
+            });
 
             this.save();
         }
@@ -84,6 +94,8 @@ export class SessionManager {
             lastActiveAt: now,
             lastSaveAt: now,
 
+            referrer: Utility.Referrer.parseReferrer(window.document.referrer || window.location.href, window.location.href),
+
             expired: {
                 expired: false,
                 reason: null
@@ -91,6 +103,13 @@ export class SessionManager {
 
             deviceInfo: this.detectDeviceInfo()
         }
+
+        Utility.Location.fetchLocation().then((loc) => {
+            if (loc && this._session) {
+                this._session.location = loc;
+                this.save();
+            }
+        });
 
         this.save();
 
@@ -185,15 +204,15 @@ export class SessionManager {
 
         const restartSession = (userId?: string) => {
             const sessionManager = this.getManager();
-            setSession( sessionManager.restartSession(userId) );
+            setSession(sessionManager.restartSession(userId));
         }
 
         useEffect(() => {
             const sessionManager = this.getManager(userId)
             let session = sessionManager.getSession();
 
-            if ( !session || session.expired?.expired ) {
-                session = sessionManager.restartSession( userId );
+            if (!session || session.expired?.expired) {
+                session = sessionManager.restartSession(userId);
             }
 
             setSession(session);

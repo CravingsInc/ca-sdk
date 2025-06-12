@@ -8,34 +8,36 @@ import PageTracker, { PageTrackerHandler } from "../core/pageTracker";
 import { EventsInteraction, PageViews } from "../types";
 import { EventsType } from "../types/enums/EventInteraction";
 
-export const usePageTracker = (): PageTrackerHandler => {
+export const usePageTracker = ( platform: string ): PageTrackerHandler => {
     const sessionHandler = useSession();
+
+    const pageTracker = PageTracker.getInstance( platform );
 
     const location = useLocation();
 
-    const [currentView, setCurrentView] = useState<PageViews | null>( PageTracker.getCurrentView() );
+    const [currentView, setCurrentView] = useState<PageViews | null>( pageTracker.getCurrentView() );
     const [scrollDepth, setScrollDepth] = useState<number>(0);
 
     const [interactionEvents, setInteractionEvents] = useState<EventsInteraction[]>([]);
     const [interactionCount, setInteractionCount] = useState<number>(0);
 
-    const listenInteration = ( e : any ) => PageTracker.listenToInteractions( sessionHandler.session?.id, e )
+    const listenInteration = ( e : any ) => pageTracker.listenToInteractions( sessionHandler.session?.id, e );
 
     useEffect(() => {
 
         if (!sessionHandler.session?.id || sessionHandler.isExpired()) return sessionHandler.restartSession();
 
-        PageTracker.startNewView(sessionHandler.session.id, location.pathname);
+        pageTracker.startNewView(sessionHandler.session.id, location.pathname);
 
-        const unsubscribe = PageTracker.subscribe(() => {
-            setCurrentView(PageTracker.getCurrentView());
-            setScrollDepth(PageTracker.getScrollDepth());
-            setInteractionEvents(prev => ([...PageTracker.getInteractionEvents()]))
-            setInteractionCount(PageTracker.getInteractionCount());
+        const unsubscribe = pageTracker.subscribe(() => {
+            setCurrentView(pageTracker.getCurrentView());
+            setScrollDepth(pageTracker.getScrollDepth());
+            setInteractionEvents(prev => ([...pageTracker.getInteractionEvents()]))
+            setInteractionCount(pageTracker.getInteractionCount());
         });
 
         
-        window.addEventListener('scroll', PageTracker.listenToScroll);
+        window.addEventListener('scroll', pageTracker.listenToScroll);
 
         window.addEventListener('click', listenInteration);
         window.addEventListener('keydown', listenInteration);
@@ -45,11 +47,11 @@ export const usePageTracker = (): PageTrackerHandler => {
             unsubscribe();
 
             
-            window.removeEventListener('scroll', PageTracker.listenToScroll);
+            window.removeEventListener('scroll', pageTracker.listenToScroll);
             window.removeEventListener('click', listenInteration);
             window.removeEventListener('keydown', listenInteration);
         }
-    }, [PageTracker, sessionHandler.session?.id, sessionHandler.isExpired(), location.pathname ]);
+    }, [pageTracker, sessionHandler.session?.id, sessionHandler.isExpired(), location.pathname ]);
 
 
     return {
@@ -58,8 +60,9 @@ export const usePageTracker = (): PageTrackerHandler => {
         scrollDepth,
         interactionEvents,
         interactionCount,
-        triggerEvent: (event: { target: string, type: EventsType, data?: any, id?: string }) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : PageTracker.triggerEvent(sessionHandler.session.id, event),
-        startNewView: (url: string, referrer?: string | null) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : PageTracker.startNewView(sessionHandler.session?.id, url, referrer),
-        endView: PageTracker.endView
+        triggerEvent: (event: { target: string, type: EventsType, data?: any, id?: string }) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : pageTracker.triggerEvent(sessionHandler.session.id, event),
+        startNewView: (url: string, referrer?: string | null) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : pageTracker.startNewView(sessionHandler.session?.id, url, referrer),
+        endView: pageTracker.endView,
+        platform
     }
 }

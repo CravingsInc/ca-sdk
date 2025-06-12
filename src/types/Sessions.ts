@@ -1,4 +1,6 @@
 import { DeviceInfo } from "./enums";
+import { LocationData } from "./Location";
+import { Referrer } from "./Referrer";
 
 export type Sessions = {
     id: string;
@@ -21,15 +23,9 @@ export type Sessions = {
         browser: DeviceInfo.DeviceBrowser;
     };
 
-    location?: {
-        country: string;
-        city: string;
-        region: string;
-        coordinates?: {
-            lat: number;
-            lng: number;
-        }
-    };
+    referrer: Referrer;
+
+    location?: LocationData;
     
     expired: {
         expired: boolean;
