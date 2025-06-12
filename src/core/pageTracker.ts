@@ -105,7 +105,7 @@ class PageTracker {
                 type: this.getEventType(e),
                 target: `${(this.currentView ? this.currentView.url : '/')}#${label}`,
                 time: new Date(),
-                data: dataAttr
+                data: JSON.parse(dataAttr || "{}")
             }
 
             this.interactionEvents.push(event);
