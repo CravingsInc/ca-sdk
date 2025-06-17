@@ -4,7 +4,6 @@ import { PageViews, EventsInteraction } from '../types';
 
 import { EventsType } from '../types/enums/EventInteraction';
 import { Utility } from './Utility';
-import { Referrer } from '../types/Referrer';
 
 type PageTrackerListener = () => void;
 
@@ -22,7 +21,6 @@ export type PageTrackerHandler = {
 
 class PageTracker {
     private static _instance: PageTracker;
-    private static _platform: string;
 
     private listeners: Set<PageTrackerListener> = new Set();
 
@@ -31,12 +29,10 @@ class PageTracker {
     private interactionEvents: EventsInteraction[] = [];
     private interactionCount = 0;
 
-    private constructor( platform: string ) {
-        PageTracker._platform = platform;
-    }
+    private constructor() {}
 
-    public static getInstance( platform: string ): PageTracker {
-        if (!PageTracker._instance) PageTracker._instance = new PageTracker( platform ); 
+    public static getInstance(): PageTracker {
+        if (!PageTracker._instance) PageTracker._instance = new PageTracker(); 
 
         return PageTracker._instance;
     }
@@ -57,11 +53,17 @@ class PageTracker {
 
         const now = new Date();
 
+        const referrerUrl = (
+            window.location.hostname === 'localhost' ?
+                window.location.hostname + ":" + window.location.port 
+                    : window.location.hostname
+        ) + ( referrer || prevUrl ) + ( new URL(window.location.href) ).search
+
         this.currentView = {
             id: uuidv4(),
             sessionId,
             url: `${url.substring(url.indexOf('/'))}`, // Makes sure it isn't domain based tracking, but just route
-            referrer: Utility.Referrer.parseReferrer( window.document.referrer || referrer || prevUrl, referrer || prevUrl ),
+            referrer: Utility.Referrer.parseReferrer( window.document.referrer || referrerUrl, referrer || prevUrl ),
             timeStarted: now,
             timeEnded: now, // will be updated on end
             timeSpent: 0,
@@ -77,8 +79,6 @@ class PageTracker {
         this.interactionCount = 0;
 
         this.notifyListeners()
-
-        console.log( this )
     }
 
     public listenToScroll = () => {
@@ -118,7 +118,7 @@ class PageTracker {
             this.interactionCount++;
             this.notifyListeners();
 
-            console.log( this )
+            Utility.Logger.debug( "listenToInteractions", this )
         }
     }
 
@@ -186,8 +186,6 @@ class PageTracker {
 
         this.interactionCount++;
         this.notifyListeners();
-
-        console.log( this )
     }
 }
 

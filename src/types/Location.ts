@@ -7,4 +7,18 @@ export type LocationData = {
         lat: number;
         lng: number;
     };
+    ip: string;
 };
+
+export type LocationRadar = {
+    type: "radar";
+    authorization: string;
+}
+
+export type LocationCustom = {
+    type: "custom";
+    api: string;
+    authorization?: string;
+}
+
+export type LocationOptions = LocationCustom | LocationRadar;

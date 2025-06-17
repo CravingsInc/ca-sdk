@@ -14,19 +14,14 @@ export class SessionManager {
 
     // Static
     private static _sessionManager: SessionManager | null = null;
-    private static _platform: string = "";
 
     // Instance
     private SESSION_KEY = "__cravings_ca_sdk_session";
 
     private _session: Sessions | null = null;
 
-    private constructor( platform: string, locationApi?: string,userId?: string ) {
+    private constructor( userId?: string ) {
         const stored = localStorage.getItem(this.SESSION_KEY);
-
-        SessionManager._platform = platform;
-        
-        locationApi && ( Utility.Location.setLocationApi( locationApi ) );
 
         const now = new Date();
 
@@ -197,13 +192,8 @@ export class SessionManager {
         return this._session;
     }
 
-    public static getManager(platform: string, locationApi?: string, userId?: string) {
-        if (!this._sessionManager) this._sessionManager = new SessionManager( platform, locationApi, userId );
-
-        // Switches whenever locationApi switches
-        if ( locationApi && !Utility.Location.isLocationApi( locationApi ) ) {
-            Utility.Location.setLocationApi( locationApi )
-        }
+    public static getManager( userId?: string ) {
+        if (!this._sessionManager) this._sessionManager = new SessionManager( userId );
 
         // Switches whenever userId switches
         if ( userId && userId !== this._sessionManager._session?.user.id ) {
@@ -219,9 +209,9 @@ export class SessionManager {
         return this._sessionManager
     }
 
-    public static useSessionsManager( platform: string, locationApi?: string, userId?: string): SessionContextType {
+    public static useSessionsManager( userId?: string): SessionContextType {
         const [session, setSession] = useState<Sessions | null>(null);
-        const sessionManager = this.getManager( platform, locationApi, userId );
+        const sessionManager = this.getManager( userId );
 
         sessionManager.useAutomicSessionSave();
 
@@ -230,7 +220,7 @@ export class SessionManager {
         }
 
         useEffect(() => {
-            const sessionManager = this.getManager( platform, locationApi, userId )
+            const sessionManager = this.getManager( userId )
             let session = sessionManager.getSession();
 
             if (!session || session.expired?.expired) {

@@ -7,11 +7,12 @@ import { useSession } from "./useSession";
 import PageTracker, { PageTrackerHandler } from "../core/pageTracker";
 import { EventsInteraction, PageViews } from "../types";
 import { EventsType } from "../types/enums/EventInteraction";
+import { Utility } from "../core/Utility";
 
-export const usePageTracker = ( platform: string ): PageTrackerHandler => {
+export const usePageTracker = (): PageTrackerHandler => {
     const sessionHandler = useSession();
 
-    const pageTracker = PageTracker.getInstance( platform );
+    const pageTracker = PageTracker.getInstance();
 
     const location = useLocation();
 
@@ -63,6 +64,6 @@ export const usePageTracker = ( platform: string ): PageTrackerHandler => {
         triggerEvent: (event: { target: string, type: EventsType, data?: any, id?: string }) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : pageTracker.triggerEvent(sessionHandler.session.id, event),
         startNewView: (url: string, referrer?: string | null) => (!sessionHandler.session?.id || sessionHandler.isExpired()) ? {} : pageTracker.startNewView(sessionHandler.session?.id, url, referrer),
         endView: pageTracker.endView,
-        platform
+        platform: Utility.PLATFORM.toString()
     }
 }
