@@ -94,6 +94,7 @@ Captures specific frontend events:
 - Supported Types: `click`, `scroll`, `input`, `hover`, etc.
 - Captures timestamp, target element, and optional event data.
 
+
 ```ts
 {
     id: string; // unique event id
